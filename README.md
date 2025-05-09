@@ -1,5 +1,7 @@
 # EffectiveTMatrix.jl
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10529120.svg)](https://doi.org/10.5281/zenodo.10529120)
+
 **EffectiveTMatrix.jl** is a Julia package for simulating wave scattering in media composed of randomly packed particles. It implements the *Effective Waves Method* as described in [Napal et al. (2024)](https://royalsocietypublishing.org/doi/full/10.1098/rspa.2023.0660), enabling efficient computation of effective T-matrices for 2D particulate systems.
 
 The package also includes brute-force Monte Carlo simulations to validate the accuracy and convergence of the effective model against direct ensemble averages.
@@ -15,9 +17,6 @@ The package also includes brute-force Monte Carlo simulations to validate the ac
 - Run Monte Carlo simulations for validation and benchmarking
 - Designed with extensibility for future wave scattering models
 
-
-
-[![][doi-img]][doi-url] 
 
 ## Installation
 
