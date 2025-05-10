@@ -13,7 +13,7 @@ source =   mode_source(host_medium,input_mode); # V_0
 
 ω=0.1; #0.2                                    # frequency
 M=N=45.0;  
-resolution = 50                                 # sizes of the rectangle where to plot
+resolution = 200                                 # sizes of the rectangle where to plot
 bottomleft = [-M;-N]; topright = [M;N];
 region = Box([bottomleft, topright]);
 
@@ -29,12 +29,12 @@ cylinder = Material(Circle(radius_big_cylinder),microstructure);
 us = average_scattered_field(ω, region, source, cylinder; only_scattered_waves=true,basis_field_order=5);
 # plot(us, ω; field_apply=real,seriestype = :contour,c=:balance)
 expected_plot = plot(us, ω; field_apply=real,seriestype = :contour,c=:balance,legend=:none,title="Predicted\nEnsemble Average\n");
+expected_plot = annotate!(0.0,0.0,text("effective\nmaterial", :black, 10))
 
-
-basis_order=3;
+basis_order=5;
 
 x_vec, _ = points_in_shape(region;resolution=resolution);                            # space discretization 
-nb_of_configurations = 5;                                                   # total number of config 
+nb_of_configurations = 100;                                                   # total number of config 
 
 l = @layout [a b c; d{0.1h}]
 
@@ -62,7 +62,7 @@ anim = @animate for i ∈ 1:nb_of_configurations
     
     plot(sc_plot,mean_sc_plot, expected_plot, progress_plot,layout=l,size=(1500,700))
 end
-gif(anim, "animation1.gif", fps = nb_of_configurations/10)
+gif(anim, "animation1.gif", fps = nb_of_configurations/100)
 
 
 
