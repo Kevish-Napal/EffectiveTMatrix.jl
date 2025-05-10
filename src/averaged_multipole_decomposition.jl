@@ -1,6 +1,5 @@
 # Return matrix of computed coefficients a col corresponds to a configuration
 
- # not sure this function is needed here? (only appears in the naive method apparently)
 function mode_source(medium::Acoustic{T,2},N::Int) where T <: AbstractFloat
     coeffs = complex(zeros(2abs(N)+1))
     N<0 ? coeffs[1] = 1.0+0.0im : coeffs[end] = 1.0+0.0im

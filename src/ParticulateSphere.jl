@@ -119,26 +119,44 @@ function average_scattered_field(ω::AbstractFloat, region, source::AbstractSour
 end
 
 function average_scattered_field(ω::AbstractFloat, x_vec::Vector{V}, source::AbstractSource{P}, material::ParticulateSphere{T,Dim};
-     basis_order=10::Integer, basis_field_order=10::Integer) where {T,Dim,P<:PhysicalMedium{Dim},V <: AbstractArray{T}}
+    only_scattered_waves=false::bool, basis_order=10::Integer, basis_field_order=10::Integer) where {T,Dim,P<:PhysicalMedium{Dim},V <: AbstractArray{T}}
 
     T_matrix =  t_matrix(ω, source.medium, material; basis_order=basis_order, basis_field_order=basis_field_order)
     source_coefficient = regular_spherical_coefficients(source)
     G = source_coefficient(basis_field_order,zeros(Dim),ω)
-
+    
     N = basislength_to_basisorder(P,length(G))
     basis = outgoing_basis_function(source.medium, ω)
-
-    function us(x)
-        sum(G.* T_matrix.* basis(N, x))
+    
+    function us_func(x)
+        basis(N, x)*(G.* T_matrix)
     end
+    
+    # println("T_matrix = ", T_matrix)
+    # println("G = ", G)
+    # print("basis=",basis(N, [.324,0.0]))
+    # print("combination=",basis(N, [.324,0.0])*(G.* T_matrix))
 
-    utot = map(x_vec) do x
-        if sqrt(x'*x) > radius(material)
-            field(source)(x,ω) + us(x)
-        else
-            .0+.0im # unknown for now
+    if only_scattered_waves
+        us = map(x_vec) do x
+            if sqrt(x'*x) > radius(material)
+                us_func(x)
+            else
+                .0+.0im # unknown for now
+            end
         end
-    end
+    
+        return FrequencySimulationResult(us,x_vec,[ω])
 
-    return FrequencySimulationResult(utot,x_vec,[ω])
+    else
+        utot = map(x_vec) do x
+            if sqrt(x'*x) > radius(material)
+                field(source)(x,ω) + us_func(x)
+            else
+                .0+.0im # unknown for now
+            end
+        end
+    
+        return FrequencySimulationResult(utot,x_vec,[ω])
+    end
 end
